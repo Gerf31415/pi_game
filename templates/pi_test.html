@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pi Test</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for highlighting individual characters */
+        .incorrect {
+            background-color: #ffcccc; /* Light red for incorrect digits */
+            font-weight: bold;
+            /* You can adjust other properties for incorrect digits */
+        }
+        .corrected {
+            background-color: #ccffcc; /* Light green for corrected digits */
+            font-weight: bold;
+            /* You can adjust other properties for corrected digits */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Test Your Pi Knowledge</h1>
+        <form method="post" id="clear-form">
+            <div class="form-group">
+                <label for="pi_digits">Enter Digits of Pi:</label>
+                <input type="text" id="pi_digits" name="pi_digits" class="form-control" value="{{ user_input|default('') }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="button" class="btn btn-secondary" onclick="clearInput()">Clear</button>
+        </form>
+        {% if correct_digits is defined %}
+        <div class="mt-4">
+            <p>You got {{ correct_digits }} out of {{ digits_entered }} digits correct!</p>
+            <p>Percentage correct: {{ percentage_correct }}%</p>
+        </div>
+        {% endif %}
+        {% if user_input is defined and corrected_pi is defined and incorrect_digits is defined and user_input_indices is defined %}
+        <div class="mt-4">
+            <p>User's Input:</p>
+            <p>
+                {% for index in user_input_indices %}{% if index in incorrect_digits %}<span class="incorrect">{{ user_input[index] }}</span>{% else %}{{ user_input[index] }}{% endif %}{% if (index + 4) % 5 == 0 %}&nbsp;{% endif %}{% if (index + 4) % 50 == 0 %}<br>{% endif %}{% endfor %}
+            </p>
+            <p>Corrected Pi:</p>
+            <p>
+                {% for index in user_input_indices %}{% if index in incorrect_digits %}<span class="corrected">{{ corrected_pi[index] }}</span>{% else %}{{ corrected_pi[index] }}{% endif %}{% if (index + 4) % 5 == 0 %}&nbsp;{% endif %}{% if (index + 4) % 50 == 0 %}<br>{% endif %}{% endfor %}
+            </p>
+            <p>Next Digits:</p>
+            <p>
+                {% for index in range(digits_entered, digits_entered + 10) %}{{ pi_digits[index] }}{% if (index + 4) % 5 == 0 %}&nbsp;{% endif %}{% endfor %}
+            </p>
+        </div>
+        {% endif %}
+        <a href="/" class="btn btn-secondary mt-3">Back to Homepage</a>
+    </div>
+    <!-- Add Bootstrap JS (Optional) -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <script>
+        function clearInput() {
+            document.getElementById("pi_digits").value = ""; // Clear input field
+        }
+    </script>
+</body>
+</html>

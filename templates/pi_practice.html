@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Practice Pi</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom CSS for highlighting individual characters */
+        .incorrect {
+            background-color: #ffcccc; /* Light red for incorrect digits */
+            font-weight: bold;
+            /* You can adjust other properties for incorrect digits */
+        }
+        .corrected {
+            background-color: #ccffcc; /* Light green for corrected digits */
+            font-weight: bold;
+            /* You can adjust other properties for corrected digits */
+        }
+        .hidden {
+            display: none; /* Initially hide the corrected pi section */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Practice Pi</h1>
+        <form method="post" id="pi-practice-form">
+            <div class="form-group">
+                <label for="pi_practice_digits">Enter Digits of Pi:</label>
+                <input type="text" id="pi_practice_digits" name="pi_practice_digits" class="form-control" value="">
+            </div>
+            <p>Total Digits Typed: <span id="digitCount">0</span></p>
+            <p>Previous Digits: {{ previous_digits }}</p>
+            <button type="button" class="btn btn-primary" onclick="clearPracticeInput()">Clear</button>
+            <button type="button" class="btn btn-primary" onclick="toggleCorrectedPi()">Corrected Pi</button>
+            <button type="button" class="btn btn-primary" onclick="toggleNextDigits()">Next Digits</button>
+            <button type="button" class="btn btn-primary" onclick="toggleStartDigits()">Start Digits</button>
+        </form>
+        <div class="mt-3 start-digits hidden">
+            <h5>Starting Digit:</h5>
+            <form method="post" id="start-digit-form">
+                <div class="form-group">
+                    <label for="start-digit">Enter a Starting Digit:</label>
+                    <input type="text" id="start-digit" name="start-digit" class="form-control" value="">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div class="mt-3">
+            <h5>User Input:</h5>
+            <p id="userInputDisplay"></p>
+        </div>
+        <div class="mt-3 corrected-pi hidden">
+            <h5>Corrected Pi:</h5>
+            <p id="correctedPiDisplay"></p>
+        </div>
+        <div class="mt-3 next-digits hidden">
+            <h5>Next Digits:</h5>
+            <p id="nextDigitsDisplay"></p>
+        </div>
+        <a href="/" class="btn btn-secondary mt-3">Back to Homepage</a>
+    </div>
+    <!-- Add Bootstrap JS (Optional) -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> -->
+    <script>
+        function clearPracticeInput() {
+            document.getElementById("pi_practice_digits").value = ""; // Clear input field
+        }
+
+        function clearStartInput() {
+            document.getElementById("start-digit").value = ""; // Clear input field
+        }
+
+        const piDigits = "{{ pi_digits }}"; // Load pi digits from Flask
+
+        document.getElementById('pi_practice_digits').addEventListener('input', function() {
+            const userInput = this.value;
+            const userInputLength = userInput.length;
+            let userInputFeedback = '';
+            let correctedPiFeedback = '';
+
+            for (let i = 0; i < userInput.length; i++) {
+                if (userInput[i] === piDigits[i]) {
+                    userInputFeedback += userInput[i];
+                    correctedPiFeedback += piDigits[i];
+                } else {
+                    userInputFeedback += `<span class="incorrect">${userInput[i]}</span>`;
+                    correctedPiFeedback += `<span class="corrected">${piDigits[i]}</span>`;
+                }
+                // Add space after every 5 characters and line break after every 10 characters
+                if ((i + 1) % 5 === 0) userInputFeedback += ' ';
+                if ((i + 1) % 50 === 0) userInputFeedback += '<br>';
+                if ((i + 1) % 5 === 0) correctedPiFeedback += ' ';
+                if ((i + 1) % 50 === 0) correctedPiFeedback += '<br>';
+            }
+
+            const nextDigits = piDigits.substring(userInputLength, userInputLength + 10);
+            
+            document.getElementById('nextDigitsDisplay').innerHTML = nextDigits;
+            document.getElementById('userInputDisplay').innerHTML = userInputFeedback;
+            document.getElementById('correctedPiDisplay').innerHTML = correctedPiFeedback;
+
+            document.getElementById('digitCount').innerText = userInputLength; // Display the number of digits
+        });
+
+        function toggleCorrectedPi() {
+            const correctedPiSection = document.querySelector('.corrected-pi');
+            correctedPiSection.classList.toggle('hidden');
+        }
+
+        function toggleNextDigits() {
+            const nextDigitsSection = document.querySelector('.next-digits');
+            nextDigitsSection.classList.toggle('hidden');
+        }
+
+        function toggleStartDigits() {
+            const startDigitsSection = document.querySelector('.start-digits');
+            startDigitsSection.classList.toggle('hidden');
+        }
+    </script>
+</body>
+</html>
