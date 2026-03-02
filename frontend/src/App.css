@@ -1,0 +1,14 @@
+/* Pi highlighting */
+.pi-incorrect {
+  background-color: #ffcccc;
+  font-weight: bold;
+}
+
+.pi-corrected {
+  background-color: #ccffcc;
+  font-weight: bold;
+}
+
+body {
+  background-color: #f8f9fa;
+}
