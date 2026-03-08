@@ -35,10 +35,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "pi_game_backend.urls"
 
+REACT_BUILD_DIR = BASE_DIR.parent / "frontend" / "build"
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [REACT_BUILD_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -72,6 +74,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [REACT_BUILD_DIR / "static"]
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Django REST Framework
@@ -96,6 +99,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
