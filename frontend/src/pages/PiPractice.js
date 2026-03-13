@@ -87,15 +87,24 @@ export default function PiPractice() {
     }
   };
 
+  // When starting from position 0, "3." is its own chunk; decimal digits group in 5s from "14159"
+  const piPrefix = startPos === 0;
+
   const renderFeedback = (items, type) =>
     items.map((f, i) => {
       const ch = type === "user" ? f.ch : (f.expected ?? f.ch);
       const cls = f.correct ? "" : type === "user" ? "pi-incorrect" : "pi-corrected";
+      const addSpace = piPrefix
+        ? i === 1 || (i > 1 && (i - 1) % 5 === 0)
+        : (i + 1) % 5 === 0;
+      const addBreak = piPrefix
+        ? i === 46 || (i > 46 && (i - 46) % 50 === 0)
+        : (i + 1) % 50 === 0;
       return (
         <React.Fragment key={i}>
           <span className={cls}>{ch}</span>
-          {(i + 1) % 5 === 0 && <span>&nbsp;</span>}
-          {(i + 1) % 50 === 0 && <br />}
+          {addSpace && <span>&nbsp;</span>}
+          {addBreak && <br />}
         </React.Fragment>
       );
     });
