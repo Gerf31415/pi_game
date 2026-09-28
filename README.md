@@ -4,7 +4,7 @@ A web app for memorizing the digits of pi. You can test yourself, practice from 
 
 Built with a **Django REST** backend and a **React** frontend. Django serves the built React app, so in normal use you only run one server.
 
-<!-- TODO: add a short blurb about why you built this / screenshot -->
+I've been memorizing digits of pi as a hobby on and off since 6th grade, and I had always been frustrated by the lack of good tools out there. In 2023 I started developing a simpler version of this custom tool to support the process, and my recall took off! Since then, I've won the MIT alumni association pi recitation contest 2 years in a row, reciting over 1000 digits from memory last year. The chunk-based learning method built into the site also has the fun benefit of allowing learners to index into pi from memory - come pi day, give me any number between 1 and 1000 and I can tell you what digit of pi sits at that index!
 
 ## Features
 
@@ -12,8 +12,6 @@ Built with a **Django REST** backend and a **React** frontend. Django serves the
 - **Practice** (`/practice`): practice typing digits from any starting position. You can show the corrected digits or the next few digits as hints.
 - **Learn** (`/learn`): browse the digits of pi.
 - **Accounts** (`/register`, `/login`, `/profile`): logged-in users can save their test and practice results and see their history on their profile.
-
-<!-- TODO: add more detail on each mode -->
 
 ## Tech stack
 
@@ -106,10 +104,6 @@ All endpoints live under `/api/`.
 
 The backend reads `pi.txt` at startup and strips all whitespace. To support more digits, add them to that file.
 
-## Roadmap
-
-<!-- TODO: planned features -->
-
 ## License
 
-<!-- TODO: add a LICENSE file and name the license here -->
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
