@@ -1,13 +1,28 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
+from django.core.exceptions import ImproperlyConfigured
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-_lze_=#w2o7jn5)8z+rn_2y3!y#ub*o445d^i4e(-)5hr5%e%s"
 
-DEBUG = True
+def env_list(name, default):
+    """Read a comma-separated environment variable into a list."""
+    return [item.strip() for item in os.environ.get(name, default).split(",") if item.strip()]
 
-ALLOWED_HOSTS = ["*"]
+
+# Local development works with no configuration. For production, set
+# DJANGO_DEBUG=False, DJANGO_SECRET_KEY, and DJANGO_ALLOWED_HOSTS.
+DEBUG = os.environ.get("DJANGO_DEBUG", "True").lower() in ("1", "true", "yes")
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+if not SECRET_KEY:
+    if not DEBUG:
+        raise ImproperlyConfigured("DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is False.")
+    SECRET_KEY = "django-insecure-local-development-only"
+
+ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -94,15 +109,12 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": True,
 }
 
-# CORS — allow React dev server
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-
-CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOW_CREDENTIALS = True
+# CORS — the frontend calls the API at http://localhost:8000, so pages loaded
+# from the React dev server (:3000) or from 127.0.0.1 are cross-origin.
+CORS_ALLOWED_ORIGINS = env_list(
+    "DJANGO_CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://127.0.0.1:3000,http://localhost:8000,http://127.0.0.1:8000",
+)
 
 # Pi digits file path
 PI_FILE_PATH = BASE_DIR.parent / "pi.txt"
